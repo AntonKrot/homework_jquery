@@ -101,40 +101,43 @@ function editRow(btnEdit, ind, el) {
 $(".users-edit").submit(function (e) {
     e.preventDefault();
     if ($("#id").val()) {
+        console.log($("#id").val());
+        var changeInfo = {
+            id: $("#id").val(),
+            fullName: $("#fullname").val(),
+            birthday: $("#birthday").val(),
+            profession: $("#profession").val(),
+            address: $("#address").val(),
+            country: $("#country").val(),
+            shortInfo: $("#short-info").val(),
+            fullInfo: $("#full-info").val()
+        };
         $.ajax({
             url: "/user",
             type: "PUT",
-            contentType: 'application/json',
-            dataType: 'json',
-            success: function () {
-                var changeInfo = {
-                    id: $("#id").val(),
-                    fullName: $("#fullname").val(),
-                    birthday: $("#birthday").val(),
-                    profession: $("#profession").val(),
-                    address: $("#address").val(),
-                    country: $("#country").val(),
-                    shortInfo: $("#short-info").val(),
-                    fullInfo: $("#full-info").val()
-                };
-                var str = $(".users-edit").serialize();
+            data: JSON.stringify(changeInfo),
+            contentType: "application/json",
+            dataType: "json",
+            success: function (updatedUser) {
+                console.log(updatedUser);
 
-                $.getJSON("/user?id=" + el[ind].id, function (data) {
-                    var parent = btnEdit.parentElement.parentElement;
-                    parent.children[0] = data.fullName;
-                    parent.children[1] = data.birthday;
-                    parent.children[2] = data.shortInfo;
-                    $(".users-edit").addClass("users-edit-hidden");
-                });
+                // var str = $(".users-edit").serialize();
+                //
+                // $.getJSON("/user?id=" + el[ind].id, function (data) {
+                //     var parent = btnEdit.parentElement.parentElement;
+                //     parent.children[0] = data.fullName;
+                //     parent.children[1] = data.birthday;
+                //     parent.children[2] = data.shortInfo;
+                //     $(".users-edit").addClass("users-edit-hidden");
+                // });
             }
-
 
         });
     } else {
         $.ajax({
             url: "/user",
             type: "POST",
-            contentType: 'application/json',
+            contentType: "application/json",
             dataType: 'json',
             success: function () {
                 $.getJSON("/user", function (data) {
